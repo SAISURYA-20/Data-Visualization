@@ -1,0 +1,53 @@
+# Task 4: Multivariate Analysis on Songs Dataset
+
+# Step – 1 Load the Dataset
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from pandas.plotting import parallel_coordinates
+
+# Load dataset
+df = pd.read_csv("songs_reduced.csv")
+print(df.head())
+print(df.info())
+
+# Step – 2 Identify Numeric & Categorical Columns
+num_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+cat_cols = df.select_dtypes(include=['object']).columns.tolist()
+
+print("Numeric Columns:", num_cols)
+print("Categorical Columns:", cat_cols)
+
+# Step – 3 Scatterplot Matrix
+# Shows pairwise relationships between several numerical variables.
+sns.pairplot(df[num_cols], diag_kind='kde')
+plt.suptitle("Scatterplot Matrix", y=1.02)
+plt.show()
+
+# Step – 4 Parallel Coordinates
+# Visualizes trends across multiple numeric features for each category.
+target_col = cat_cols[1]  # using genre for coloring
+
+subset_cols = num_cols[:5] + [target_col]  # take numeric + target col
+parallel_coordinates(df[subset_cols], class_column=target_col, colormap='viridis')
+plt.title("Parallel Coordinates Plot")
+plt.show()
+
+# Step – 5 Line Graph
+# Shows multiple numeric measures over the record index.
+df[num_cols[:4]].plot(kind='line', figsize=(10,5))
+plt.title("Line Graph of Multiple Measures")
+plt.xlabel("Record Index")
+plt.ylabel("Value")
+plt.show()
+
+# Step – 6 Stacked Bar Chart
+# Shows multiple categorical variables in one plot.
+if len(cat_cols) >= 2:
+    stacked_data = pd.crosstab(df[cat_cols[0]], df[cat_cols[1]])
+    stacked_data.plot(kind='bar', stacked=True, figsize=(8,5))
+    plt.title(f"Stacked Bar Chart: {cat_cols[0]} vs {cat_cols[1]}")
+    plt.ylabel("Count")
+    plt.show()
+else:
+    print("Not enough categorical columns for stacked bar chart.")
