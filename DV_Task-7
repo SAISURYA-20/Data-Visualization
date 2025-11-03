@@ -1,0 +1,51 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud, STOPWORDS
+import re
+
+# =========================================================================
+# 🎶 1. DATA LOADING AND TEXT CORPUS PREPARATION
+# =========================================================================
+file_name = "songs_10_rows (1) (1).csv"
+df = pd.read_csv(file_name)
+
+# Identify the text columns relevant for frequency analysis
+TEXT_COLUMNS = ['song', 'genre']
+
+# Combine all text data into a single corpus string
+# We use a list comprehension to join words from all relevant columns
+text_corpus = ' '.join(
+    df[col].astype(str).str.replace(r'[,.]', '', regex=True).str.lower().str.strip()
+    for col in TEXT_COLUMNS
+)
+
+# You can optionally add more text here, like artist names:
+# text_corpus += ' ' + ' '.join(df['artist'].astype(str).str.lower())
+
+# =========================================================================
+# 🖼️ 2. WORD CLOUD GENERATION
+# =========================================================================
+
+# Define stop words (common words to exclude from the visual)
+# For short text like titles/genres, the default list is often fine, but we can customize:
+custom_stopwords = set(STOPWORDS)
+custom_stopwords.update(['all', 'the', 'small', 'things', 'life', 'my'])
+
+# Create a WordCloud object
+wordcloud = WordCloud(
+    width=800,
+    height=400,
+    background_color='white',
+    stopwords=custom_stopwords,
+    min_font_size=10
+).generate(text_corpus)
+
+# =========================================================================
+# 📉 3. VISUALIZATION
+# =========================================================================
+
+plt.figure(figsize=(12, 6))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off') # Hide the axes
+plt.title('Word Cloud of Song Titles and Genres', fontsize=18)
+plt.show()
