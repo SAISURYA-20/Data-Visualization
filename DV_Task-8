@@ -1,0 +1,63 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Spotify songs dataset
+file_path = 'songs_normalize_reduce.csv'
+df = pd.read_csv(file_path)
+
+# Plot the distribution of track popularity
+fig, ax = plt.subplots(figsize=(10, 5))
+df['popularity'].plot(kind='hist', bins=30, ax=ax, color='skyblue', edgecolor='black')
+plt.title('Distribution of Track Popularity')
+plt.xlabel('Popularity (0-100)')
+plt.ylabel('Number of Tracks')
+plt.show()
+
+# Identify top genres (by number of appearances)
+top_genres = df['genre'].value_counts().head(5).index
+
+# Calculate mean feature values for top genres
+genre_means = df[df['genre'].isin(top_genres)].groupby('genre')[['danceability', 'energy', 'acousticness', 'popularity']].mean()
+print(genre_means)
+
+# Plot mean danceability and energy for top genres
+genre_means[['danceability', 'energy']].plot(kind='bar', figsize=(10, 5))
+plt.title('Mean Danceability and Energy by Top Genre')
+plt.ylabel('Mean Value (0-1)')
+plt.xticks(rotation=45, ha='right')
+plt.legend()
+plt.show()
+
+# Display the first few tracks with their calculated popularity
+print(df[['artist', 'song', 'popularity']].head())
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the Spotify dataset
+file_path = 'songs_normalize_reduce.csv'
+spotify = pd.read_csv(file_path)
+
+# Plot the 'original map': Distribution of track popularity
+fig, ax = plt.subplots(figsize=(10, 5))
+spotify['popularity'].plot(kind='hist', bins=30, color='skyblue', edgecolor='black', ax=ax)
+plt.title('Spotify Tracks (Original Feature: Popularity)')
+plt.xlabel('Popularity (0-100)')
+plt.ylabel('Number of Tracks')
+plt.show()
+
+# "Reproject" the data: Sort and show top 10 most popular tracks
+spotify_sorted = spotify.sort_values(by='popularity', ascending=False)
+top_tracks = spotify_sorted.head(10)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.barh(top_tracks['song'][::-1], top_tracks['popularity'][::-1], color='green')
+plt.title('Top 10 Tracks by Popularity')
+plt.xlabel('Popularity')
+plt.ylabel('Track')
+plt.tight_layout()
+plt.show()
+
+# Perform basic analysis (calculate and display danceability of tracks)
+spotify['danceability'] = spotify['danceability']  # Already present, just for analogy
+print(spotify[['artist', 'song', 'popularity', 'danceability']].head())
