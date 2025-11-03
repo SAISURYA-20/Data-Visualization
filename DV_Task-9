@@ -1,0 +1,76 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_csv('songs_10_rows .csv')
+data.columns = data.columns.str.strip()
+data['year'] = pd.to_datetime(data['year'], format='%Y')
+data.set_index('year', inplace=True)
+
+plt.figure(figsize=(10, 6))
+sns.lineplot(data=data, x=data.index, y='popularity')
+plt.title('Line Graph of Track Popularity over Time')
+plt.xlabel('Year')
+plt.ylabel('Popularity (0-100)')
+plt.grid(True)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+data = pd.read_csv('songs_10_rows .csv')
+data.columns = data.columns.str.strip()
+data['year'] = pd.to_datetime(data['year'], format='%Y')
+data.set_index('year', inplace=True)
+data['popularity'].fillna(data['popularity'].mean(), inplace=True)
+x = data.index.year.values.reshape(-1, 1)
+y = data['popularity'].values
+
+model = LinearRegression()
+model.fit(x, y)
+trend = model.predict(x)
+
+plt.figure(figsize=(10, 6))
+plt.scatter(data.index.year, data['popularity'], color='blue', label='Popularity Data')
+plt.plot(data.index.year, trend, color='red', linewidth=2, label='Trend Line')
+plt.title('Track Popularity Trend with Trend Line')
+plt.xlabel('Year')
+plt.ylabel('Popularity (0-100)')
+plt.grid(True)
+plt.legend()
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Assuming the dataset file name is 'songs_10_rows .csv'
+data = pd.read_csv('songs_10_rows .csv')
+data.columns = data.columns.str.strip()
+
+# Calculate the yearly mean popularity.
+# Since the dataset contains only 'year' and not full date-time,
+# we group by 'year' to find the average 'popularity' for that year.
+yearly_mean_popularity = data.groupby('year')['popularity'].mean()
+
+# Set up the plot
+plt.figure(figsize=(10, 6))
+
+# Generate the Area Chart
+# The .plot() method on the Series (yearly_mean_popularity) is used
+yearly_mean_popularity.plot(kind='area', color='skyblue', alpha=0.7)
+
+# Customize the plot
+plt.title('Yearly Mean Song Popularity')
+plt.xlabel('Year')
+plt.ylabel('Mean Popularity')
+plt.grid(True)
+# Ensure x-ticks show the actual years present in the data
+plt.xticks(yearly_mean_popularity.index, rotation=45)
+plt.tight_layout()
+plt.show()
