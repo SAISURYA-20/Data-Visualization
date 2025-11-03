@@ -1,0 +1,90 @@
+0# STEP 1 – Load the dataset
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset and select only 7 columns
+df = pd.read_csv("songs_reduced.csv")[[
+    'artist', 'genre', 'year', 'popularity', 'danceability', 'energy', 'tempo'
+]]
+print(df.head())
+
+# STEP 2 – Identify Categorical & Continuous Columns
+categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
+# Only keep year and popularity as continuous
+continuous_cols = ['year', 'popularity']
+
+print("Categorical Columns:", categorical_cols)
+print("Continuous Columns:", continuous_cols)
+
+# =====================
+# STEP 3 – Categorical vs Categorical
+# =====================
+if 'artist' in categorical_cols and 'genre' in categorical_cols:
+    # 3.1 Stacked Bar Chart
+    pd.crosstab(df['artist'], df['genre']).plot(kind='bar', stacked=True)
+    plt.title("Stacked Bar Chart: Artist vs Genre")
+    plt.ylabel("Count")
+    plt.show()
+
+    # 3.2 Grouped Bar Chart
+    pd.crosstab(df['artist'], df['genre']).plot(kind='bar', stacked=False)
+    plt.title("Grouped Bar Chart: Artist vs Genre")
+    plt.ylabel("Count")
+    plt.show()
+
+    # 3.3 Segmented Bar Chart (Percent)
+    (pd.crosstab(df['artist'], df['genre'], normalize='index') * 100).plot(kind='bar', stacked=True)
+    plt.title("Segmented Bar Chart (%): Artist vs Genre")
+    plt.ylabel("Percentage")
+    plt.show()
+
+# =====================
+# STEP 4 – Continuous vs Continuous
+# =====================
+# Example: year vs popularity
+if 'year' in continuous_cols and 'popularity' in continuous_cols:
+    sns.lmplot(data=df, x='year', y='popularity', line_kws={'color':'red'})
+    plt.title("Scatterplot with Fit Line: Year vs Popularity")
+    plt.show()
+
+# =====================
+# STEP 5 – Categorical vs Continuous
+# =====================
+# Example: genre (categorical) vs popularity (continuous)
+if 'genre' in categorical_cols and 'popularity' in continuous_cols:
+    cat = 'genre'
+    cont = 'popularity'
+
+    # 5.1 Bar Chart (Mean)
+    df.groupby(cat)[cont].mean().plot(kind='bar', color='lightgreen')
+    plt.title(f"Average {cont} by {cat}")
+    plt.ylabel(f"Average {cont}")
+    plt.show()
+
+    # 5.2 Kernel Density Plot
+    sns.kdeplot(data=df, x=cont, hue=cat, fill=True)
+    plt.title(f"Grouped Kernel Density: {cont} by {cat}")
+    plt.show()
+
+    # 5.3 Box Plot
+    sns.boxplot(data=df, x=cat, y=cont)
+    plt.title(f"Box Plot: {cat} vs {cont}")
+    plt.show()
+
+    # 5.4 Violin Plot
+    sns.violinplot(data=df, x=cat, y=cont, inner='quartile')
+    plt.title(f"Violin Plot: {cat} vs {cont}")
+    plt.show()
+
+    # 5.5 Ridgeline Plot
+    !pip install joypy
+    from joypy import joyplot
+    joyplot(df, by=cat, column=cont, figsize=(8,5))
+    plt.title(f"Ridgeline Plot: {cont} by {cat}")
+    plt.show()
+
+    # 5.6 Beeswarm Plot
+    sns.swarmplot(data=df, x=cat, y=cont)
+    plt.title(f"Beeswarm Plot: {cat} vs {cont}")
+    plt.show()
