@@ -1,0 +1,50 @@
+////task-5A
+import pandas as pd
+import plotly.express as px
+
+# Load your dataset
+file_path = "songs_reduced (1).csv"
+df = pd.read_csv(file_path)
+
+# TreeMap (Genre → Artist → Year, values = Popularity)
+fig_tree_map = px.treemap(
+    df,
+    path=['genre', 'artist', 'year'],
+    values='popularity',
+    title='TreeMap: Popularity by Genre, Artist, and Year'
+)
+fig_tree_map.show()
+
+# Sunburst Chart (Genre → Artist → Year, values = Popularity)
+fig_sunburst = px.sunburst(
+    df,
+    path=['genre', 'artist', 'year'],
+    values='popularity',
+    title='Sunburst: Popularity by Genre, Artist, and Year'
+)
+fig_sunburst.show()
+
+//////task-5B
+import plotly.graph_objects as go
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("songs_reduced (1).csv")
+
+# Filter top 5 songs per genre & artist (by popularity)
+top_songs = (
+    df.sort_values("popularity", ascending=False)
+      .groupby(["genre", "artist"])
+      .head(5)
+      .reset_index(drop=True)
+)
+
+# Create Sunburst chart
+fig = go.Figure(go.Sunburst(
+    labels=top_songs['genre'] + ' - ' + top_songs['artist'] + ': ' + top_songs['year'].astype(str),
+    parents=[''] * len(top_songs),   # all root level (like your student example)
+    values=top_songs['popularity']
+))
+
+fig.update_layout(title='Top 5 Songs in Genre and Artist by Year (Popularity)')
+fig.show()
