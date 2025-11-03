@@ -1,0 +1,74 @@
+# -----------------------------------------------
+# Health Care Analysis: Patient Care & Cost Reduction
+# Data Visualization Script
+# -----------------------------------------------
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the dataset (update the path if needed)
+file_path = "healthcare_analysis_dataset.csv"
+df = pd.read_csv(file_path)
+
+# -------------------------------
+# 1️⃣ Bar Chart: Average Treatment Cost by Hospital
+# -------------------------------
+plt.figure(figsize=(8, 5))
+df.groupby("Hospital_Name")["Treatment_Cost"].mean().sort_values().plot(kind="bar", color="skyblue")
+plt.title("Average Treatment Cost by Hospital", fontsize=13)
+plt.ylabel("Average Cost (USD)", fontsize=11)
+plt.xlabel("Hospital", fontsize=11)
+plt.xticks(rotation=45)
+plt.grid(axis="y", linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+# -------------------------------
+# 2️⃣ Pie Chart: Distribution of Diagnoses
+# -------------------------------
+plt.figure(figsize=(6, 6))
+df["Diagnosis"].value_counts().plot(kind="pie", autopct='%1.1f%%', startangle=140, colors=plt.cm.Paired.colors)
+plt.title("Distribution of Diagnoses Among Patients", fontsize=13)
+plt.ylabel("")
+plt.tight_layout()
+plt.show()
+
+# -------------------------------
+# 3️⃣ Scatter Plot: BMI vs Treatment Cost
+# -------------------------------
+plt.figure(figsize=(8, 5))
+plt.scatter(df["BMI"], df["Treatment_Cost"], color="coral", edgecolor="black", alpha=0.8)
+plt.title("Relationship between BMI and Treatment Cost", fontsize=13)
+plt.xlabel("BMI", fontsize=11)
+plt.ylabel("Treatment Cost (USD)", fontsize=11)
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.tight_layout()
+plt.show()
+
+# -------------------------------
+# 4️⃣ Box Plot: Treatment Cost by Treatment Type
+# -------------------------------
+plt.figure(figsize=(8, 5))
+df.boxplot(column="Treatment_Cost", by="Treatment_Type", grid=False, patch_artist=True,
+           boxprops=dict(facecolor="lightyellow", color="black"),
+           medianprops=dict(color="red"))
+plt.title("Treatment Cost Distribution by Treatment Type", fontsize=13)
+plt.suptitle("")
+plt.xlabel("Treatment Type", fontsize=11)
+plt.ylabel("Treatment Cost (USD)", fontsize=11)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# -------------------------------
+# 5️⃣ Column Chart: Average Patient Satisfaction by Hospital
+# -------------------------------
+plt.figure(figsize=(8, 5))
+avg_satisfaction = df.groupby("Hospital_Name")["Patient_Satisfaction_Score"].mean()
+plt.bar(avg_satisfaction.index, avg_satisfaction.values, color="teal", width=0.6)
+plt.title("Average Patient Satisfaction Score by Hospital", fontsize=13)
+plt.ylabel("Average Satisfaction Score", fontsize=11)
+plt.xlabel("Hospital", fontsize=11)
+plt.grid(axis="y", linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.show()
