@@ -1,0 +1,145 @@
+////Task-2A
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 2: Load Dataset
+df = pd.read_csv("songs_normalize_1_to_6.csv")  # Make sure the CSV file is in the same directory
+
+# Step 3: Categorical Summary (Univariate)
+# Let's analyze the column: genre
+print(df['genre'].value_counts())
+print(df['genre'].value_counts(normalize=True) * 100)  # Percentage
+
+# Step 4: Bar Chart
+sns.countplot(x='genre', data=df)
+plt.title("Bar Chart - Genre Distribution")
+plt.xlabel("Genre")
+plt.ylabel("Count")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Step 5: Pie Chart
+# Prepare data
+genre_counts = df['genre'].value_counts()
+
+# Plot pie chart
+plt.pie(genre_counts, labels=genre_counts.index, autopct='%1.1f%%', startangle=90)
+plt.title("Pie Chart - Genre Distribution")
+plt.axis('equal')  # Equal aspect ratio ensures pie is a circle
+plt.show()
+
+# Step 1: Import Required Libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 2: Load the Dataset
+df = pd.read_csv("songs_normalize_1_to_6.csv")  # Use the correct path
+
+# Step 3: Display First Few Rows
+print(df.head())
+
+# Step 4: Select a Continuous Variable
+# We'll analyze danceability, energy, and valence one by one.
+danceability = df['danceability']
+energy = df['energy']
+valence = df['valence']
+
+# Step 5: Summary Statistics
+print("Danceability Summary:")
+print(danceability.describe())
+
+print("\nEnergy Summary:")
+print(energy.describe())
+
+print("\nValence Summary:")
+print(valence.describe())
+
+# Step 6: Histogram (Distribution)
+sns.histplot(danceability, bins=10, kde=False)
+plt.title("Histogram of Danceability")
+plt.xlabel("Danceability")
+plt.ylabel("Frequency")
+plt.show()
+
+# Step 7: Box Plot (Outliers and Spread)
+sns.boxplot(x=danceability)
+plt.title("Box Plot of Danceability")
+plt.xlabel("Danceability")
+plt.show()
+
+# Step 8: Density Plot (Smooth Distribution)
+sns.kdeplot(danceability, shade=True)
+plt.title("Density Plot of Danceability")
+plt.xlabel("Danceability")
+plt.show()
+
+# Step 9: Rug Plot (Exact Value Indicators)
+sns.rugplot(danceability, height=0.1)
+plt.title("Rug Plot of Danceability")
+plt.xlabel("Danceability")
+plt.show()
+
+//////Task-2B
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# --- 1. Load Dataset ---
+# Replace with your dataset path
+df = pd.read_csv("Employee.csv")
+
+# --- 2. Identify categorical and continuous attributes ---
+categorical_cols = df.select_dtypes(include=['object', 'category']).columns
+continuous_cols = df.select_dtypes(include=['int64', 'float64']).columns
+
+print("Categorical Attributes:", categorical_cols.tolist())
+print("Continuous Attributes:", continuous_cols.tolist())
+
+# Choose one categorical and one continuous column for demonstration
+cat_col = categorical_cols[0] if len(categorical_cols) > 0 else None
+cont_col = continuous_cols[0] if len(continuous_cols) > 0 else None
+
+# --- 3. Univariate Analysis for Categorical Data ---
+if cat_col:
+    # Bar Chart
+    plt.figure(figsize=(6,4))
+    df[cat_col].value_counts().plot(kind='bar', color='skyblue')
+    plt.title(f"Bar Chart of {cat_col}")
+    plt.xlabel(cat_col)
+    plt.ylabel("Count")
+    plt.show()
+
+    # Pie Chart
+    plt.figure(figsize=(6,6))
+    df[cat_col].value_counts().plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette("pastel"))
+    plt.title(f"Pie Chart of {cat_col}")
+    plt.ylabel("")  # Remove y-label for cleaner look
+    plt.show()
+
+# --- 4. Univariate Analysis for Continuous Data ---
+if cont_col:
+    # Histogram
+    plt.figure(figsize=(6,4))
+    sns.histplot(df[cont_col], bins=20, kde=False, color='orange')
+    plt.title(f"Histogram of {cont_col}")
+    plt.xlabel(cont_col)
+    plt.ylabel("Frequency")
+    plt.show()
+
+    # Density Plot
+    plt.figure(figsize=(6,4))
+    sns.kdeplot(df[cont_col], shade=True, color='green')
+    plt.title(f"Density Plot of {cont_col}")
+    plt.xlabel(cont_col)
+    plt.ylabel("Density")
+    plt.show()
+
+    # Rug Plot
+    plt.figure(figsize=(6,4))
+    sns.rugplot(df[cont_col], color='red')
+    plt.title(f"Rug Plot of {cont_col}")
+    plt.xlabel(cont_col)
+    plt.show()
