@@ -1,0 +1,30 @@
+import pandas as pd
+import networkx as nx
+import matplotlib.pyplot as plt
+
+file_path = "/content/songs_10_rows (1).csv"
+df = pd.read_csv(file_path)
+G = nx.Graph()
+for _, row in df.iterrows():
+    artist = row["artist"]
+    song = row["song"]
+    genres = row["genre"].split(", ")
+    G.add_node(artist, type="artist")
+    G.add_node(song, type="song")
+    G.add_edge(artist, song)
+    for genre in genres:
+        G.add_node(genre, type="genre")
+        G.add_edge(song, genre)
+pos = nx.spring_layout(G, k=0.5, seed=42)
+color_map = []
+for node in G:
+    if G.nodes[node]["type"] == "artist":
+        color_map.append("lightgreen")
+    elif G.nodes[node]["type"] == "song":
+        color_map.append("skyblue")
+    else:
+        color_map.append("salmon")
+plt.figure(figsize=(10, 8))
+nx.draw(G, pos, with_labels=True, node_size=1200, node_color=color_map, font_size=8, font_weight="bold")
+plt.title("Songs Network (Artists, Songs, Genres)")
+plt.show()
